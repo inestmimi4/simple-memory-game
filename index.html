@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Memory Game</h2>
+        <div class="game"></div>
+        <button class="reset">Reset Game</button>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+    const emojis = ["😊", "😊", "😄", "😄", "😍", "😍", "😎", "😎", "😇", "😇", "😜", "😜", "🥳", "🥳", "😊", "😊"];
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    shuffle(emojis);
+
+    let openCards = [];
+
+    function checkMatch() {
+        const [firstCard, secondCard] = openCards;
+        if (firstCard.innerHTML === secondCard.innerHTML) {
+            firstCard.classList.add("boxMatch");
+            secondCard.classList.add("boxMatch");
+            openCards = [];
+            if (document.querySelectorAll('.boxMatch').length === emojis.length) {
+                alert('Vous avez gagné !');
+            }
+        } else {
+            setTimeout(function () {
+                firstCard.classList.remove('boxOpen');
+                secondCard.classList.remove('boxOpen');
+                openCards = [];
+            }, 500);
+        }
+    }
+
+    function handleClick() {
+        const card = this;
+        if (openCards.length < 2 && !card.classList.contains('boxOpen') && !card.classList.contains('boxMatch')) {
+            card.classList.add('boxOpen');
+            openCards.push(card);
+
+            if (openCards.length === 2) {
+                setTimeout(checkMatch, 500);
+            }
+        }
+    }
+
+    for (var i = 0; i < emojis.length; i++) {
+        let box = document.createElement('div');
+        box.className = 'item';
+        box.innerHTML = emojis[i];
+        box.addEventListener('click', handleClick);
+        document.querySelector('.game').appendChild(box);
+    }
+});
+    </script>
+</body>
+</html>
